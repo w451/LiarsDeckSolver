@@ -53,23 +53,24 @@ struct LiarsNode {
 	bool is_call_only;
 	bool can_call;
 	int total_node_count;
-
+	int max_play_count;
 
 	LiarsNode(int p, int mine, int opponents, bool call = false) : player(p), num_cards(mine), is_call_node(call), total_node_count(1){
 
-		can_call = !is_call_node && (p != 0 || mine != 5);
+		can_call = !is_call_node && (p != 0 || num_cards != 5);
+		max_play_count = std::min(num_cards, 3);
 
 		//Number of different actions (1 good 1 bad, badgood goodgood badbad)
-		int count[5] = { 2,5,9,14,20 };
+		int count[5] = { 2,5,9,9,9 };
 
 		is_call_only = opponents == 0;
 		
-		observed_action_count = (int)can_call + mine; //Observers will see us play 1-n cards or call
-		range_size = mine + 1;
+		observed_action_count = (int)can_call + max_play_count; //Observers will see us play 1-n cards or call
+		range_size = num_cards + 1;
 
 		if (!is_call_node) {
 			if (!is_call_only) {
-				action_count =  (int)can_call + count[mine - 1];
+				action_count =  (int)can_call + count[max_play_count - 1];
 			} else {
 				observed_action_count = 1;
 				action_count = 1;
@@ -84,13 +85,13 @@ struct LiarsNode {
 		}
 
 		if (!is_call_only) {
-			for (int i = 0; i < mine; i++) {
-				children[i] = new LiarsNode(p ^ 1, opponents, mine - i - 1);
+			for (int i = 0; i < max_play_count; i++) {
+				children[i] = new LiarsNode(p ^ 1, opponents, num_cards - i - 1);
 				total_node_count += children[i]->total_node_count;
 			}
 			if (can_call) {
-				children[mine] = new LiarsNode(p ^ 1, 0, 0, true);
-				total_node_count += children[mine]->total_node_count;
+				children[max_play_count] = new LiarsNode(p ^ 1, 0, 0, true);
+				total_node_count += children[max_play_count]->total_node_count;
 			}
 		} else if (can_call) {
 			children[0] = new LiarsNode(p ^ 1, 0, 0, true);
@@ -104,8 +105,7 @@ struct LiarsNode {
 				strategy[i] = new double*[6];
 				for (int j = 0; j < 6; j++) {
 
-					strategy_sum[i][j] = new double[range_size];
-
+					strategy_sum[i][j] = new double[range_size];				
 					regret_sum[i][j] = new double[range_size];
 					strategy[i][j] = new double[range_size];
 					for (int k = 0; k < range_size; k++) {
@@ -141,12 +141,8 @@ struct LiarsNode {
 		}
 	}
 
-	int MapToActionNumber(int nc, int goods) {
-		return ((num_cards - 1) * (num_cards + 2)) / 2 + goods;
-	}
-
 	int MapToActionNumber(int goods) {
-		return MapToActionNumber(goods, num_cards);
+		return ((max_play_count - 1) * (max_play_count + 2)) / 2 + goods;
 	}
 
 	std::pair<int, int> ActionConvert(int action) {
@@ -191,9 +187,10 @@ struct LiarsNode {
 		}
 
 		pair<int, int> result = ActionConvert(a);
+
 		int my_bads = num_cards - goods;
 		int attempted_bads = result.first - result.second;
-		return result.first <= num_cards && result.second <= goods && attempted_bads <= my_bads;
+		return result.first <= max_play_count && result.second <= goods && attempted_bads <= my_bads ;
 	}
 
 	vector<vector<int>> action_cache = vector<vector<int>>(6);
@@ -542,19 +539,19 @@ struct LiarsNode {
 	}
 
 	json strategy_to_json() {
-		double totals[6][6] = { {0} };
+		double totals[6][6] = {{0}};
 		
 		for (int ic = 0; ic <= 5; ic++) {
 			for (int current = 0; current < range_size; current++) {
 				vector<int> legal_actions;
-				GetAllLegalActions(ic, legal_actions);
+				GetAllLegalActions(current, legal_actions);
+
 				for (int a : legal_actions) {
 					totals[ic][current] += strategy_sum[a][ic][current];
 				}
 			}
 		}
 		
-
 		//j[action][initial_count][current_count]
 		json j = json::array();
 		for (int i = 0; i < action_count; ++i) {
@@ -568,6 +565,7 @@ struct LiarsNode {
 			}
 			j.push_back(row);
 		}
+
 		return j;
 	}
 

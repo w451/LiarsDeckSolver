@@ -16,9 +16,9 @@ Computes the exploitability of the strategy
 
 The game consists of 503 nodes.
 
-The first player to act has a 47.34% chance to win the game. One possible reason for this is because when both players are dealt poor hands (0 or 1 cards of the table) both of their optimal strategies involve frequent bluffing as well as frequent calling. Since Player 1 is forced to play a card first, Player 2 will have the chance to call hence frequently winning the game in these weak-handed nodes.
+The first player to act has a 47.35% chance to win the game. One possible reason for this is because when both players are dealt poor hands (0 or 1 cards of the table) both of their optimal strategies involve frequent bluffing as well as frequent calling. Since Player 1 is forced to play a card first, Player 2 will have the chance to call hence frequently winning the game in these weak-handed nodes.
 
-A computed strategy is provided after 100,000,000 iterations with an exploitability of .0417% 
+A computed strategy is provided after 76,000,000 iterations with an exploitability of .05% 
 
 # Analysis of Optimal Strategy
 
