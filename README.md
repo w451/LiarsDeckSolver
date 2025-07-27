@@ -20,6 +20,8 @@ The first player to act has a 47.35% chance to win the game. One possible reason
 
 A computed strategy is provided after 76,000,000 iterations with an exploitability of .05% 
 
+![Output of strategy_viewer.py](https://raw.githubusercontent.com/w451/LiarsDeckSolver/refs/heads/master/BasicCFR/initial_strategy.PNG "Optimal strategy for Player 1's first turn")
+
 # Analysis of Optimal Strategy
 
 The equilibrium strategy involves mostly (>99%) only calling and playing 1 card. Playing more than 1 card in a turn (as a non-guaranteed win), however, is not necessarily -EV. One specific spot where more than 1 card is played is on Player 2's first turn where they play 2 cards of the table 1.9% of the time when holding 4 cards of the table. 
