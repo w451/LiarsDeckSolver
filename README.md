@@ -14,19 +14,12 @@ Computes the exploitability of the strategy
 
 # Results
 
-The game consists of 503 nodes.
+The game consists of 421 nodes.
 
 The first player to act has a 47.35% chance to win the game. One possible reason for this is because when both players are dealt poor hands (0 or 1 cards of the table) both of their optimal strategies involve frequent bluffing as well as frequent calling. Since Player 1 is forced to play a card first, Player 2 will have the chance to call hence frequently winning the game in these weak-handed nodes.
 
 A computed strategy is provided after 76,000,000 iterations with an exploitability of .05% 
 
-![Output of strategy_viewer.py](https://raw.githubusercontent.com/w451/LiarsDeckSolver/refs/heads/master/BasicCFR/initial_strategy.PNG "Optimal strategy for Player 1's first turn")
-
-
 # Analysis of Optimal Strategy
 
 The equilibrium strategy involves mostly (>99%) only calling and playing 1 card. Playing more than 1 card in a turn (as a non-guaranteed win), however, is not necessarily -EV. One specific spot where more than 1 card is played is on Player 2's first turn where they play 2 cards of the table 1.9% of the time when holding 4 cards of the table. 
-
-# Choice of Algorithm
-
-CFR algorithms are widely regarded as the best for solving imperfect information games. I chose External MCCFR because it is the most simple implementation since there is a action-observed action mismatch in this game. Whether Player 1 plays 1 card of the table or 1 bluff the observed action is that 1 card has been played and so the opponent will have the same strategy regardless of which exact play Player 1 made. As such the Vanilla CFR algorithm is more cumbersome to implement while MCCFR is not.
