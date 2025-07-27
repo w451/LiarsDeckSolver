@@ -24,4 +24,4 @@ A computed strategy is provided after 76,000,000 iterations with an exploitabili
 
 # Analysis of Optimal Strategy
 
-The equilibrium strategy involves mostly (>99%) only calling and playing 1 card. Playing more than 1 card in a turn (as a non-guaranteed win), however, is not necessarily -EV. One specific spot where more than 1 card is played is on Player 2's first turn where they play 2 cards of the table 1.9% of the time when holding 4 cards of the table. 
+The equilibrium strategy involves mostly (>99%) only calling and playing 1 card, except in the case of holding 5 cards where the player must play more than 1 card to ensure that they will win on their second turn.
